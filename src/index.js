@@ -1,12 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter } from 'react-router-dom';
-import { Provider as ReduxProvider } from "react-redux";
-import getStore from "./store/getStore";
-import reducers from './reducers';
-import Main from './Main';
+import { BrowserRouter } from "react-router-dom";
+import Main from "./Main";
 import reportWebVitals from "./reportWebVitals";
-
 
 // import main sass file
 import "./sass/app.scss";
@@ -14,13 +10,11 @@ import { CalendarProvider } from "./hook/CalendarContext";
 
 ReactDOM.render(
   <React.StrictMode>
-    <ReduxProvider store={getStore(reducers)}>
-      <CalendarProvider>
-        <BrowserRouter>
-          <Main />
-        </BrowserRouter>
-      </CalendarProvider>
-    </ReduxProvider>
+    <CalendarProvider>
+      <BrowserRouter>
+        <Main />
+      </BrowserRouter>
+    </CalendarProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

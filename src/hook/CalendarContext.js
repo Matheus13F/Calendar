@@ -1,11 +1,18 @@
-import { createContext, useState, useContext, useEffect } from 'react';
-import { weekDays } from '../constants/WeekDays';
+import { createContext, useState, useContext, useEffect } from "react";
+import { weekDays } from "../constants/WeekDays";
 import {
-  getDayAfterCurrentMonth, 
+  getDayAfterCurrentMonth,
   getDayBeforeCurrentMonth,
   lastDate,
-  firstDate
-} from './helper';
+  firstDate,
+} from "./helper";
+import {
+  subDays,
+  startOfMonth,
+  format,
+  lastDayOfMonth,
+  addDays,
+} from "date-fns";
 
 const CalendarContext = createContext();
 
@@ -14,33 +21,44 @@ function CalendarProvider({ children }) {
   const [reminderCalendar, setReminderCalendar] = useState([]);
 
   const allDates = [];
+  const lastDayOfMonthDate = lastDayOfMonth(new Date());
 
-  const countOfdaysBeforeFisrtDate = getDayBeforeCurrentMonth(weekDays[firstDate.getDay()])
-  const countOfdaysAfterLastDate = getDayAfterCurrentMonth(weekDays[lastDate.getDay()])
+  const countOfdaysBeforeFisrtDate = getDayBeforeCurrentMonth(
+    weekDays[firstDate.getDay()]
+  );
+  const countOfdaysAfterLastDate = getDayAfterCurrentMonth(
+    weekDays[lastDate.getDay()]
+  );
 
-  for(let i = countOfdaysBeforeFisrtDate; i > 0; i --){
-    const firstDayToCompare = (new Date(new Date().getFullYear(), new Date().getMonth(), 1));
-    firstDayToCompare.setDate(firstDayToCompare.getDate() - i);
+  for (let i = countOfdaysBeforeFisrtDate; i > 0; i--) {
+    const firstDayToCompare = subDays(startOfMonth(new Date()), i);
     pushData(
-      firstDayToCompare.getDate(), 
-      weekDays[firstDayToCompare.getDay()], 
-      firstDayToCompare.getMonth() + 1, 
+      firstDayToCompare.getDate(),
+      format(firstDayToCompare, "EEEE"),
+      firstDayToCompare.getMonth() + 1,
       true
     );
   }
 
-  for(let i = 1; i <= lastDate.getDate(); i ++){
-    let currentDate = (new Date(new Date().getFullYear(), new Date().getMonth(), i));
-    pushData(currentDate.getDate(), weekDays[currentDate.getDay()], currentDate.getMonth() + 1);
+  for (let i = 1; i <= lastDate.getDate(); i++) {
+    let currentDate = new Date(
+      new Date().getFullYear(),
+      new Date().getMonth(),
+      i
+    );
+    pushData(
+      currentDate.getDate(),
+      weekDays[currentDate.getDay()],
+      currentDate.getMonth() + 1
+    );
   }
 
-  for(let i = 1; i <= countOfdaysAfterLastDate; i ++){
-    const lastDayToCompare = (new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0));
-    lastDayToCompare.setDate(lastDayToCompare.getDate() + i);
+  for (let i = 1; i <= countOfdaysAfterLastDate; i++) {
+    const currentDate = addDays(lastDayOfMonthDate, i);
     pushData(
-      lastDayToCompare.getDate(),
-      weekDays[lastDayToCompare.getDay()],
-      lastDayToCompare.getMonth() + 1,
+      currentDate.getDate(),
+      format(currentDate, "EEEE"),
+      currentDate.getMonth() + 1,
       true
     );
   }
@@ -50,29 +68,38 @@ function CalendarProvider({ children }) {
       day: day,
       weekDay: weekDay,
       currentMonth: month,
-      dayOff: dayOutOfCurrentMonth
-    })
+      dayOff: dayOutOfCurrentMonth,
+    });
   }
 
   useEffect(() => {
-    setCalendarDays(...calendarDays, allDates);
+    // Checks for data saved to localStorage
+    const savedCalendarDays = JSON.parse(localStorage.getItem("calendarDays"));
+
+    if (savedCalendarDays !== null) {
+      setCalendarDays(savedCalendarDays);
+    } else {
+      setCalendarDays(...calendarDays, allDates);
+    }
   }, []);
 
   return (
-    <CalendarContext.Provider value={{
-      calendarDays, 
-      setCalendarDays, 
-      reminderCalendar, 
-      setReminderCalendar
-    }}>
+    <CalendarContext.Provider
+      value={{
+        calendarDays,
+        setCalendarDays,
+        reminderCalendar,
+        setReminderCalendar,
+      }}
+    >
       {children}
     </CalendarContext.Provider>
   );
-};
-
-function useCalendar() {
-    const context = useContext(CalendarContext);
-    return context;
 }
 
-export { useCalendar, CalendarProvider }
+function useCalendar() {
+  const context = useContext(CalendarContext);
+  return context;
+}
+
+export { useCalendar, CalendarProvider };
