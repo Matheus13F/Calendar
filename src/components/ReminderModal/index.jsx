@@ -27,7 +27,7 @@ export default function ReminderModal({ open, setOpen, infoForReminder }) {
     const reminders = {
       title: title,
       description: description,
-      time: time,
+      time: time
     };
 
     const tempAddReminder = UpdateCalendarWithReminder(
@@ -57,8 +57,8 @@ export default function ReminderModal({ open, setOpen, infoForReminder }) {
           lon: long,
           appid: "1db481d00d3a5b22eec89d08051534c9",
           lang: "en",
-          units: "metric",
-        },
+          units: "metric"
+        }
       })
       .then((response) => {
         setWather(response.data);

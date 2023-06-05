@@ -4,14 +4,14 @@ import {
   getDayAfterCurrentMonth,
   getDayBeforeCurrentMonth,
   lastDate,
-  firstDate,
+  firstDate
 } from "./helper";
 import {
   subDays,
   startOfMonth,
   format,
   lastDayOfMonth,
-  addDays,
+  addDays
 } from "date-fns";
 
 const CalendarContext = createContext();
@@ -68,7 +68,7 @@ function CalendarProvider({ children }) {
       day: day,
       weekDay: weekDay,
       currentMonth: month,
-      dayOff: dayOutOfCurrentMonth,
+      dayOff: dayOutOfCurrentMonth
     });
   }
 
@@ -81,6 +81,7 @@ function CalendarProvider({ children }) {
     } else {
       setCalendarDays(...calendarDays, allDates);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -89,7 +90,7 @@ function CalendarProvider({ children }) {
         calendarDays,
         setCalendarDays,
         reminderCalendar,
-        setReminderCalendar,
+        setReminderCalendar
       }}
     >
       {children}

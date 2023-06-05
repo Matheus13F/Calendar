@@ -2,9 +2,9 @@
   "extends": "react-app",
   "plugins": ["react-hooks"],
   "rules": {
-    "react-hooks/exhaustive-deps": "off",
+    "react-hooks/exhaustive-deps": "warn",
     "react/react-in-jsx-scope": "off",
-    "comma-dangle": ["off"],
+    "comma-dangle": ["error", "never"],
     "object-curly-newline": [
       "error",
       { "consistent": true, "minProperties": 7 }

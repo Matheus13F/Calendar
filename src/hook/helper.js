@@ -1,3 +1,5 @@
+import { endOfMonth, startOfMonth } from 'date-fns';
+
 export function getDayAfterCurrentMonth(dayOfWeek) {
     let countDaysAfter = 0;
       switch(dayOfWeek) {
@@ -58,5 +60,5 @@ export function getDayBeforeCurrentMonth(dayOfWeek) {
     return countDaysBefore;
   }
 
-export const lastDate = (new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0));
-export const firstDate = (new Date(new Date().getFullYear(), new Date().getMonth(), 1));
+export const lastDate = endOfMonth(new Date());
+export const firstDate = startOfMonth(new Date());

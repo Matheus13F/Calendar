@@ -5,7 +5,7 @@ jest.mock("../../hook/CalendarContext.js", () => {
   return {
     useCalendar() {
       return [[], () => {}];
-    },
+    }
   };
 });
 
